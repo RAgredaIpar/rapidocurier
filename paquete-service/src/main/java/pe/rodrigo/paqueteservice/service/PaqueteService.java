@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import pe.rodrigo.common.exception.EntityNotFoundException;
+import pe.rodrigo.paqueteservice.client.TrackingClient;
 import pe.rodrigo.paqueteservice.dto.request.PaqueteRequestDto;
+import pe.rodrigo.paqueteservice.dto.request.TrackingRequestDto;
 import pe.rodrigo.paqueteservice.dto.response.PaqueteResponseDto;
 import pe.rodrigo.paqueteservice.entity.Categoria;
 import pe.rodrigo.paqueteservice.entity.EstadoPaquete;
@@ -24,6 +26,7 @@ public class PaqueteService {
     private final PaqueteRepository paqueteRepository;
     private final CategoriaRepository categoriaRepository;
     private final ClienteClient clienteClient;
+    private final TrackingClient trackingClient;
     private final ModelMapper modelMapper;
 
     @io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker(name = "clienteCB", fallbackMethod = "fallbackCrearPaquete")
@@ -39,6 +42,18 @@ public class PaqueteService {
         paquete.setCostoEnvio(calcularTarifa(paquete));
 
         Paquete guardado = paqueteRepository.save(paquete);
+
+        try {
+            trackingClient.registrarEventoInicial(new TrackingRequestDto(
+                    guardado.getId(),
+                    guardado.getEstado().name(),
+                    "Agencia Principal",
+                    "Paquete registrado en el sistema e ingresado a almacén"
+            ));
+        } catch (Exception e) {
+            System.err.println("No se pudo registrar el tracking inicial: " + e.getMessage());
+        }
+
         return modelMapper.map(guardado, PaqueteResponseDto.class);
     }
 
