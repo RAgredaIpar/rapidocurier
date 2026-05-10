@@ -27,10 +27,13 @@ public class TrackingService {
         EventoTracking evento = modelMapper.map(dto, EventoTracking.class);
         EventoTracking guardado = trackingRepository.save(evento);
 
+        paqueteClient.actualizarEstadoPaquete(guardado.getPaqueteId(), guardado.getEstado().name());
+
         return modelMapper.map(guardado, TrackingResponseDto.class);
     }
 
     public TrackingResponseDto fallbackRegistrarEvento(TrackingRequestDto dto, Throwable t) {
+        t.printStackTrace();
         throw new RuntimeException("El servicio de paquetes no responde. No se puede registrar el tracking en este momento.");
     }
 

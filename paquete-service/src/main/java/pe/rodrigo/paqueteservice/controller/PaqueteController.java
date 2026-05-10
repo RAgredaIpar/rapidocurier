@@ -39,9 +39,9 @@ public class PaqueteController {
         return ResponseEntity.ok(ApiResponse.success("Paquete encontrado", data));
     }
 
-    @PatchMapping("/{id}/estado")
-    public ResponseEntity<ApiResponse<Void>> actualizarEstado(@PathVariable UUID id, @RequestParam EstadoPaquete nuevoEstado) {
-        paqueteService.actualizarEstado(id, nuevoEstado);
+    @PutMapping("/{id}/estado")
+    public ResponseEntity<ApiResponse<Void>> actualizarEstado(@PathVariable UUID id, @RequestParam EstadoPaquete estado) {
+        paqueteService.actualizarEstado(id, estado);
         return ResponseEntity.ok(ApiResponse.success("Estado del paquete actualizado", null));
     }
 
