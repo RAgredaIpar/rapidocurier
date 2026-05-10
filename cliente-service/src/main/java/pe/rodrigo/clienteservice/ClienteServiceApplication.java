@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"pe.rodrigo"})
 @EnableJpaAuditing
 @EnableFeignClients
 public class ClienteServiceApplication {

@@ -2,9 +2,7 @@ package pe.rodrigo.paqueteservice.service;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 import pe.rodrigo.common.dto.ApiResponse;
 import pe.rodrigo.paqueteservice.client.ClienteClient;
 import pe.rodrigo.paqueteservice.client.TrackingClient;
@@ -19,7 +17,6 @@ import pe.rodrigo.paqueteservice.repository.PaqueteRepository;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -121,7 +118,7 @@ public class PaqueteService {
             case ENTREGADO, CANCELADO -> false;
         };
         if (!valida) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Transición inválida de " + actual + " a " + nuevo);
+            throw new IllegalStateException("Transición inválida de " + actual + " a " + nuevo);
         }
     }
 
