@@ -3,6 +3,7 @@ package pe.rodrigo.paqueteservice.service;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import pe.rodrigo.common.exception.EntityNotFoundException;
 import pe.rodrigo.paqueteservice.dto.request.PaqueteRequestDto;
 import pe.rodrigo.paqueteservice.dto.response.PaqueteResponseDto;
 import pe.rodrigo.paqueteservice.entity.Categoria;
@@ -65,6 +66,13 @@ public class PaqueteService {
         Paquete paquete = paqueteRepository.findById(id)
                 .orElseThrow(() -> new pe.rodrigo.common.exception.EntityNotFoundException("Paquete no encontrado"));
         return modelMapper.map(paquete, PaqueteResponseDto.class);
+    }
+
+    public void actualizarEstado(UUID id, EstadoPaquete nuevoEstado) {
+        Paquete paquete = paqueteRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Paquete no encontrado"));
+        paquete.setEstado(nuevoEstado);
+        paqueteRepository.save(paquete);
     }
 
     public void eliminarPaquete(UUID id) {
