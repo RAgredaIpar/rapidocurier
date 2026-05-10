@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import pe.rodrigo.paqueteservice.entity.Categoria;
 import pe.rodrigo.paqueteservice.repository.CategoriaRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -35,6 +36,7 @@ public class DataInitializer implements CommandLineRunner {
         c.setNombre(nombre);
         c.setDescripcion(desc);
         c.setRecargo(recargo);
+        c.setCreatedAt(LocalDateTime.now());
         return c;
     }
 }
