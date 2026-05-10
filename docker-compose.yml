@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  postgres-cliente:
+    image: postgres:15-alpine
+    container_name: postgres-cliente
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: cliente_db
+    volumes:
+      - pgdata_cliente:/var/lib/postgresql/data
+
+  postgres-paquete:
+    image: postgres:15-alpine
+    container_name: postgres-paquete
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: paquete_db
+    volumes:
+      - pgdata_paquete:/var/lib/postgresql/data
+
+  postgres-tracking:
+    image: postgres:15-alpine
+    container_name: postgres-tracking
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: tracking_db
+    volumes:
+      - pgdata_tracking:/var/lib/postgresql/data
+
+volumes:
+  pgdata_cliente:
+  pgdata_paquete:
+  pgdata_tracking:
