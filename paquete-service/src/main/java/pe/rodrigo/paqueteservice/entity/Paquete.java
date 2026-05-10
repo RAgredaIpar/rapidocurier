@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import pe.rodrigo.common.entity.BaseEntity;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -14,13 +15,24 @@ import java.util.UUID;
 @Setter
 public class Paquete extends BaseEntity {
 
+    @Column(unique = true, nullable = false, updatable = false)
+    private String codigoRastreo;
+
     private String descripcion;
     private Double peso;
     private Double valorDeclarado;
     private Double costoEnvio;
 
+    private String sucursalOrigen;
+    private String sucursalDestino;
+
     @Column(nullable = false)
-    private UUID clienteId;
+    private UUID remitenteId;
+    private String nombreRemitente;
+
+    @Column(nullable = false)
+    private UUID destinatarioId;
+    private String nombreDestinatario;
 
     @Enumerated(EnumType.STRING)
     private EstadoPaquete estado;

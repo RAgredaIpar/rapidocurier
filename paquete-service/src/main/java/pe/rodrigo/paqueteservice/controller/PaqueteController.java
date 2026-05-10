@@ -28,8 +28,21 @@ public class PaqueteController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<PaqueteResponseDto>>> listar() {
-        List<PaqueteResponseDto> data = paqueteService.listarTodos();
+    public ResponseEntity<ApiResponse<List<PaqueteResponseDto>>> listar(
+            @RequestParam(required = false) String busqueda,
+            @RequestParam(required = false) String sucursal,
+            @RequestParam(required = false) EstadoPaquete estado) {
+
+        List<PaqueteResponseDto> data;
+
+        if (busqueda != null && !busqueda.isBlank()) {
+            data = paqueteService.buscarPorTexto(busqueda);
+        } else if (sucursal != null && estado != null) {
+            data = paqueteService.filtrarPorSucursalYEstado(sucursal, estado);
+        } else {
+            data = paqueteService.listarTodos();
+        }
+
         return ResponseEntity.ok(ApiResponse.success("Lista de paquetes obtenida", data));
     }
 
