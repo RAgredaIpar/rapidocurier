@@ -2,4 +2,13 @@ spring:
   application:
     name: api-gateway
   config:
-    import: optional:configserver:http://localhost:8888
+    import:
+      - optional:configserver:http://localhost:8888
+      - vault://
+  cloud:
+    vault:
+      uri: http://localhost:8200
+      token: root_token
+      kv:
+        enabled: true
+        backend: secret
