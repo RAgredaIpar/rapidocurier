@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import pe.rodrigo.common.entity.BaseEntity;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -29,10 +28,12 @@ public class Paquete extends BaseEntity {
     @Column(nullable = false)
     private UUID remitenteId;
     private String nombreRemitente;
+    private String remitenteEmail;
 
     @Column(nullable = false)
     private UUID destinatarioId;
     private String nombreDestinatario;
+    private String destinatarioEmail;
 
     @Enumerated(EnumType.STRING)
     private EstadoPaquete estado;

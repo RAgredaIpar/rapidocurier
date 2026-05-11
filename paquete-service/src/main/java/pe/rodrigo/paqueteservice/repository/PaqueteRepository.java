@@ -5,11 +5,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import pe.rodrigo.paqueteservice.entity.EstadoPaquete;
 import pe.rodrigo.paqueteservice.entity.Paquete;
-
 import java.util.List;
 import java.util.UUID;
 
 public interface PaqueteRepository extends JpaRepository<Paquete, UUID> {
+
+    List<Paquete> findByRemitenteEmailOrDestinatarioEmail(String email1, String email2);
 
     @Query("SELECT p FROM Paquete p WHERE (p.sucursalOrigen = :sucursal OR p.sucursalDestino = :sucursal) AND p.estado = :estado")
     List<Paquete> findBySucursalAndEstado(@Param("sucursal") String sucursal, @Param("estado") EstadoPaquete estado);

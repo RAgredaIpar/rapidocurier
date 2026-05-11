@@ -14,6 +14,7 @@ import pe.rodrigo.clienteservice.repository.ClienteRepository;
 import pe.rodrigo.common.exception.DuplicateResourceException;
 import pe.rodrigo.common.exception.EntityNotFoundException;
 import pe.rodrigo.common.exception.ExternalServiceException;
+import pe.rodrigo.common.security.UserContext; // <-- Importamos el contexto
 
 import java.util.List;
 import java.util.UUID;
@@ -31,6 +32,10 @@ public class ClienteService {
     private String apiToken;
 
     public ClienteResponseDto registrarCliente(ClienteCreateDto dto) {
+        if ("CLIENTE".equals(UserContext.getRole())) {
+            throw new IllegalStateException("Acceso denegado: Los clientes no pueden registrar perfiles manualmente.");
+        }
+
         if (clienteRepository.existsByEmail(dto.getEmail())) {
             throw new DuplicateResourceException("Ya existe un cliente con el email: " + dto.getEmail());
         }
@@ -60,6 +65,10 @@ public class ClienteService {
     }
 
     public ClienteResponseDto actualizar(UUID id, ClienteUpdateDto dto) {
+        if ("CLIENTE".equals(UserContext.getRole())) {
+            throw new IllegalStateException("Acceso denegado: Los clientes no pueden actualizar perfiles manualmente.");
+        }
+
         Cliente clienteExistente = clienteRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No se puede actualizar, cliente no encontrado"));
 
@@ -97,6 +106,10 @@ public class ClienteService {
 
 
     public void eliminar(UUID id) {
+        if (!"ADMIN".equals(UserContext.getRole())) {
+            throw new IllegalStateException("Acceso denegado: Solo el administrador puede eliminar clientes.");
+        }
+
         if (!clienteRepository.existsById(id)) {
             throw new EntityNotFoundException("No se puede eliminar, cliente no encontrado");
         }

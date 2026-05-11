@@ -3,6 +3,7 @@ package pe.rodrigo.trackingservice.service;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import pe.rodrigo.common.security.UserContext; // <-- Importamos nuestro contexto de seguridad
 import pe.rodrigo.trackingservice.client.PaqueteClient;
 import pe.rodrigo.trackingservice.dto.request.TrackingRequestDto;
 import pe.rodrigo.trackingservice.dto.response.TrackingResponseDto;
@@ -16,12 +17,17 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class TrackingService {
+
     private final EventoTrackingRepository trackingRepository;
     private final PaqueteClient paqueteClient;
     private final ModelMapper modelMapper;
 
     @io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker(name = "paqueteCB", fallbackMethod = "fallbackRegistrarEvento")
     public TrackingResponseDto registrarEvento(TrackingRequestDto dto) {
+        if ("CLIENTE".equals(UserContext.getRole())) {
+            throw new IllegalStateException("Acceso denegado: Solo el personal autorizado (Admin/Operador) puede registrar eventos de tracking.");
+        }
+
         paqueteClient.buscarPorId(dto.getPaqueteId());
 
         EventoTracking evento = modelMapper.map(dto, EventoTracking.class);
@@ -32,8 +38,7 @@ public class TrackingService {
         return modelMapper.map(guardado, TrackingResponseDto.class);
     }
 
-    public TrackingResponseDto fallbackRegistrarEvento(TrackingRequestDto dto, Throwable t) {
-        t.printStackTrace();
+    public TrackingResponseDto fallbackRegistrarEvento(TrackingRequestDto dto) {
         throw new RuntimeException("El servicio de paquetes no responde. No se puede registrar el tracking en este momento.");
     }
 

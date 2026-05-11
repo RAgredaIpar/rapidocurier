@@ -6,4 +6,5 @@ import lombok.Data;
 public class ClienteInfoResponseDto {
     private String nombres;
     private String apellidos;
+    private String email;
 }

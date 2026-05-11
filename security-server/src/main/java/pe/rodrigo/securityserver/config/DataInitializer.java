@@ -33,15 +33,15 @@ public class DataInitializer implements CommandLineRunner {
             userRepository.save(operador);
 
             User cliente1 = new User();
-            cliente1.setNombre("Rodrigo Cliente");
-            cliente1.setEmail("rodrigo@rapidocourier.pe");
+            cliente1.setNombre("Rodrigo Imanol");
+            cliente1.setEmail("rodrigo@gmail.com");
             cliente1.setPassword(passwordEncoder.encode("Segura123!"));
             cliente1.setRole(Role.CLIENTE);
             userRepository.save(cliente1);
 
             User cliente2 = new User();
-            cliente2.setNombre("Natali Cliente");
-            cliente2.setEmail("natali@rapidocourier.pe");
+            cliente2.setNombre("Natali Susana");
+            cliente2.setEmail("natali@gmail.com");
             cliente2.setPassword(passwordEncoder.encode("Segura123!"));
             cliente2.setRole(Role.CLIENTE);
             userRepository.save(cliente2);
