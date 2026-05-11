@@ -37,7 +37,31 @@ services:
     volumes:
       - pgdata_tracking:/var/lib/postgresql/data
 
+  postgres-security:
+    image: postgres:15-alpine
+    container_name: postgres-security
+    ports:
+      - "5435:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ima
+      POSTGRES_DB: security_db
+    volumes:
+      - pgdata_security:/var/lib/postgresql/data
+
+  vault:
+    image: hashicorp/vault:1.13
+    container_name: vault-server
+    ports:
+      - "8200:8200"
+    environment:
+      - VAULT_DEV_ROOT_TOKEN_ID=root_token
+      - VAULT_DEV_LISTEN_ADDRESS=0.0.0.0:8200
+    cap_add:
+      - IPC_LOCK
+
 volumes:
   pgdata_cliente:
   pgdata_paquete:
   pgdata_tracking:
+  pgdata_security:
