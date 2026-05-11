@@ -1,10 +1,14 @@
 package pe.rodrigo.clienteservice.dto.request;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,4 +19,8 @@ public class ClienteUpdateDto {
 
     @Pattern(regexp = "\\d{7,9}", message = "El teléfono debe tener entre 7 y 9 dígitos")
     private String telefono;
+
+    @NotEmpty(message = "Debe proporcionar al menos una dirección al actualizar")
+    @Valid
+    private List<DireccionRequestDto> direcciones;
 }

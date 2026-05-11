@@ -3,6 +3,7 @@ package pe.rodrigo.clienteservice.dto.response;
 import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -15,4 +16,5 @@ public class ClienteResponseDto {
     private String telefono;
     private String dni;
     private LocalDateTime createdAt;
+    private List<DireccionResponseDto> direcciones;
 }

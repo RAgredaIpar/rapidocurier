@@ -50,9 +50,37 @@ public class ClienteService {
         cliente.setNombres(reniecData.getFirstName());
         cliente.setApellidos(reniecData.getFirstLastName() + " " + reniecData.getSecondLastName());
 
+        if (cliente.getDirecciones() != null) {
+            cliente.getDirecciones().forEach(direccion -> direccion.setCliente(cliente));
+        }
+
         Cliente guardado = clienteRepository.save(cliente);
 
         return modelMapper.map(guardado, ClienteResponseDto.class);
+    }
+
+    public ClienteResponseDto actualizar(UUID id, ClienteUpdateDto dto) {
+        Cliente clienteExistente = clienteRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No se puede actualizar, cliente no encontrado"));
+
+        clienteExistente.setEmail(dto.getEmail());
+        clienteExistente.setTelefono(dto.getTelefono());
+
+        if (dto.getDirecciones() != null) {
+            clienteExistente.getDirecciones().clear();
+
+            List<pe.rodrigo.clienteservice.entity.Direccion> nuevasDirecciones = dto.getDirecciones().stream()
+                    .map(d -> {
+                        pe.rodrigo.clienteservice.entity.Direccion dir = modelMapper.map(d, pe.rodrigo.clienteservice.entity.Direccion.class);
+                        dir.setCliente(clienteExistente);
+                        return dir;
+                    }).toList();
+
+            clienteExistente.getDirecciones().addAll(nuevasDirecciones);
+        }
+
+        Cliente actualizado = clienteRepository.save(clienteExistente);
+        return modelMapper.map(actualizado, ClienteResponseDto.class);
     }
 
     public List<ClienteResponseDto> listarTodos() {
@@ -67,16 +95,6 @@ public class ClienteService {
         return modelMapper.map(cliente, ClienteResponseDto.class);
     }
 
-    public ClienteResponseDto actualizar(UUID id, ClienteUpdateDto dto) {
-        Cliente clienteExistente = clienteRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("No se puede actualizar, cliente no encontrado"));
-
-        clienteExistente.setEmail(dto.getEmail());
-        clienteExistente.setTelefono(dto.getTelefono());
-
-        Cliente actualizado = clienteRepository.save(clienteExistente);
-        return modelMapper.map(actualizado, ClienteResponseDto.class);
-    }
 
     public void eliminar(UUID id) {
         if (!clienteRepository.existsById(id)) {
